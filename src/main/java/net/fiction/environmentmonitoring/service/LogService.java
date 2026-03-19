@@ -14,6 +14,7 @@ import net.fiction.environmentmonitoring.repository.RoomRepository;
 import net.fiction.environmentmonitoring.repository.UnitMeasurementRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,6 +35,7 @@ public class LogService {
                 .orElseThrow( () -> new RuntimeException("Unidade de medida não encontrada"));
 
         Log log = logMapper.toEntity(logDto, room, unitMeasurement);
+        log.setDateHour(LocalDateTime.now());
 
         return logMapper.toDto(logRepository.save(log));
 
@@ -72,6 +74,7 @@ public class LogService {
                 unitRepository.findById(logDto.unitId())
                         .orElseThrow( () -> new RuntimeException("Unidade de medida não encontrada"))
         );
+        logSaved.setDateHour(LocalDateTime.now());
 
         return logMapper.toDto(logRepository.save(logSaved));
 
