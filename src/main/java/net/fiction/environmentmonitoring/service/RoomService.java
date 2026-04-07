@@ -3,6 +3,7 @@ package net.fiction.environmentmonitoring.service;
 import lombok.RequiredArgsConstructor;
 import net.fiction.environmentmonitoring.dto.room.RoomDTORequest;
 import net.fiction.environmentmonitoring.dto.room.RoomDTOResponse;
+import net.fiction.environmentmonitoring.infra.exception.model.NotFoundException;
 import net.fiction.environmentmonitoring.mapper.RoomMapper;
 import net.fiction.environmentmonitoring.model.Room;
 import net.fiction.environmentmonitoring.repository.RoomRepository;
@@ -42,14 +43,14 @@ public class RoomService {
 
         return roomMapper.toDto(
                 roomRepository.findById(id)
-                        .orElseThrow( () -> new RuntimeException("Cômodo não encontrado"))
+                        .orElseThrow( () -> new NotFoundException("Cômodo não encontrado"))
         );
     }
 
     public RoomDTOResponse updateById(Long id, RoomDTORequest roomDto){
 
         Room roomSaved = roomRepository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Cômodo não encontrado"));
+                .orElseThrow( () -> new NotFoundException("Cômodo não encontrado"));
 
         roomSaved.setName(roomDto.name());
         roomSaved.setFloor(roomDto.floor());
@@ -62,7 +63,7 @@ public class RoomService {
     public void deleteById(Long id){
 
         roomRepository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Cômodo não encontrado"));
+                .orElseThrow( () -> new NotFoundException("Cômodo não encontrado"));
 
         roomRepository.deleteById(id);
     }

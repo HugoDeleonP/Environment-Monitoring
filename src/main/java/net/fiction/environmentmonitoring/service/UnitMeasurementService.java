@@ -5,6 +5,7 @@ import net.fiction.environmentmonitoring.dto.sensor.SensorDTORequest;
 import net.fiction.environmentmonitoring.dto.sensor.SensorDTOResponse;
 import net.fiction.environmentmonitoring.dto.unitmeasurement.UnitMeasurementDTORequest;
 import net.fiction.environmentmonitoring.dto.unitmeasurement.UnitMeasurementDTOResponse;
+import net.fiction.environmentmonitoring.infra.exception.model.NotFoundException;
 import net.fiction.environmentmonitoring.mapper.UnitMeasurementMapper;
 import net.fiction.environmentmonitoring.model.UnitMeasurement;
 import net.fiction.environmentmonitoring.repository.UnitMeasurementRepository;
@@ -38,13 +39,13 @@ public class UnitMeasurementService {
 
         return unitMapper.toDto(
                 unitRepository.findById(id)
-                        .orElseThrow( () -> new RuntimeException("Unidade de medida não encontrada"))
+                        .orElseThrow( () -> new NotFoundException("Unidade de medida não encontrada"))
         );
     }
     public UnitMeasurementDTOResponse updateById(Long id, UnitMeasurementDTORequest unitDto){
 
         UnitMeasurement unitSaved = unitRepository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Unidade de medida não encontrada"));
+                .orElseThrow( () -> new NotFoundException("Unidade de medida não encontrada"));
 
         unitSaved.setNameUnit(unitDto.nameUnit());
         unitSaved.setNameMagnitude(unitDto.nameMagnitude());
@@ -54,7 +55,7 @@ public class UnitMeasurementService {
     }
     public void deleteById(Long id){
         unitRepository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Unidade de medida não encontrada"));
+                .orElseThrow( () -> new NotFoundException("Unidade de medida não encontrada"));
 
         unitRepository.deleteById(id);
     }

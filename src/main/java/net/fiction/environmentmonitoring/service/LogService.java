@@ -5,6 +5,7 @@ import net.fiction.environmentmonitoring.dto.log.LogDTORequest;
 import net.fiction.environmentmonitoring.dto.log.LogDTOResponse;
 import net.fiction.environmentmonitoring.dto.sensor.SensorDTORequest;
 import net.fiction.environmentmonitoring.dto.sensor.SensorDTOResponse;
+import net.fiction.environmentmonitoring.infra.exception.model.NotFoundException;
 import net.fiction.environmentmonitoring.mapper.LogMapper;
 import net.fiction.environmentmonitoring.model.Log;
 import net.fiction.environmentmonitoring.model.Room;
@@ -29,10 +30,10 @@ public class LogService {
     public LogDTOResponse save(LogDTORequest logDto) {
 
         Room room = roomRepository.findById(logDto.roomId())
-                .orElseThrow( () -> new RuntimeException("Cômodo não encontrado"));
+                .orElseThrow( () -> new NotFoundException("Cômodo não encontrado"));
 
         UnitMeasurement unitMeasurement = unitRepository.findById(logDto.unitId())
-                .orElseThrow( () -> new RuntimeException("Unidade de medida não encontrada"));
+                .orElseThrow( () -> new NotFoundException("Unidade de medida não encontrada"));
 
         Log log = logMapper.toEntity(logDto, room, unitMeasurement);
         log.setDateHour(LocalDateTime.now());
@@ -54,25 +55,25 @@ public class LogService {
 
         return logMapper.toDto(
                 logRepository.findById(id)
-                        .orElseThrow( () -> new RuntimeException("Registro não encontrado"))
+                        .orElseThrow( () -> new NotFoundException("Registro não encontrado"))
         );
     }
 
     public LogDTOResponse updateById(Long id, LogDTORequest logDto){
 
         Log logSaved = logRepository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Registro não encontrado"));
+                .orElseThrow( () -> new NotFoundException("Registro não encontrado"));
 
         logSaved.setValue(logDto.value());
 
         logSaved.setRoom(
                 roomRepository.findById(logDto.roomId())
-                        .orElseThrow( () -> new RuntimeException("Cômodo não encontrado"))
+                        .orElseThrow( () -> new NotFoundException("Cômodo não encontrado"))
         );
 
         logSaved.setUnitMeasurement(
                 unitRepository.findById(logDto.unitId())
-                        .orElseThrow( () -> new RuntimeException("Unidade de medida não encontrada"))
+                        .orElseThrow( () -> new NotFoundException("Unidade de medida não encontrada"))
         );
         logSaved.setDateHour(LocalDateTime.now());
 
@@ -83,7 +84,7 @@ public class LogService {
     public void deleteById(Long id){
 
         logRepository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Registro não encontrado"));
+                .orElseThrow( () -> new NotFoundException("Registro não encontrado"));
 
         logRepository.deleteById(id);
 

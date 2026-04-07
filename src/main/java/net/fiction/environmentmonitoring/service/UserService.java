@@ -5,6 +5,7 @@ import net.fiction.environmentmonitoring.dto.sensor.SensorDTORequest;
 import net.fiction.environmentmonitoring.dto.sensor.SensorDTOResponse;
 import net.fiction.environmentmonitoring.dto.user.UserDTORequest;
 import net.fiction.environmentmonitoring.dto.user.UserDTOResponse;
+import net.fiction.environmentmonitoring.infra.exception.model.NotFoundException;
 import net.fiction.environmentmonitoring.mapper.UserMapper;
 import net.fiction.environmentmonitoring.model.User;
 import net.fiction.environmentmonitoring.repository.UserRepository;
@@ -39,14 +40,14 @@ public class UserService {
 
         return userMapper.toDto(
                 userRepository.findById(id)
-                        .orElseThrow( () -> new RuntimeException("Usuário não encontrado"))
+                        .orElseThrow( () -> new NotFoundException("Usuário não encontrado"))
         );
     }
 
     public UserDTOResponse updateById(Long id, UserDTORequest userDto) {
 
         User userSaved = userRepository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow( () -> new NotFoundException("Usuário não encontrado"));
 
         userSaved.setFullName(userDto.fullName());
         userSaved.setEmail(userDto.email());
@@ -59,7 +60,7 @@ public class UserService {
     public void deleteById(Long id){
 
         userRepository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow( () -> new NotFoundException("Usuário não encontrado"));
 
         userRepository.deleteById(id);
 
